@@ -8,51 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Éclat Brand Colors */
+    --white: 0 0% 100%;
+    --onyx: 225 11% 4%;
+    --charcoal: 222 10% 10%;
+    --subtle: 212 17% 93%;
+    --silver: 215 11% 73%;
+    
+    /* Design System */
+    --background: var(--white);
+    --foreground: var(--onyx);
+    
+    --card: var(--white);
+    --card-foreground: var(--onyx);
+    
+    --popover: var(--white);
+    --popover-foreground: var(--onyx);
+    
+    --primary: var(--onyx);
+    --primary-foreground: var(--white);
+    
+    --secondary: var(--subtle);
+    --secondary-foreground: var(--charcoal);
+    
+    --muted: var(--subtle);
+    --muted-foreground: var(--silver);
+    
+    --accent: var(--charcoal);
+    --accent-foreground: var(--white);
+    
+    --destructive: 0 65% 51%;
+    --destructive-foreground: var(--white);
+    
+    --border: var(--subtle);
+    --input: var(--subtle);
+    --ring: var(--charcoal);
+    
+    --radius: 0.375rem;
+    
+    /* Premium gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--white)) 0%, hsl(var(--subtle)) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(var(--white)) 0%, hsl(0 0% 99%) 100%);
+    --gradient-hover: linear-gradient(135deg, hsl(var(--charcoal)) 0%, hsl(var(--onyx)) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(var(--onyx) / 0.08);
+    --shadow-hover: 0 8px 30px -6px hsl(var(--onyx) / 0.12);
+    --shadow-intense: 0 20px 40px -12px hsl(var(--onyx) / 0.15);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .dark {
@@ -100,6 +106,98 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    letter-spacing: -0.01em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Custom utility classes */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .gradient-hover {
+    background: var(--gradient-hover);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .shadow-intense {
+    box-shadow: var(--shadow-intense);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-spring {
+    transition: var(--transition-spring);
+  }
+  
+  /* Magnetic button effect */
+  .magnetic-button {
+    @apply transition-all duration-300 ease-out;
+    transform-origin: center;
+  }
+  
+  .magnetic-button:hover {
+    @apply scale-105;
+    transform: translateY(-2px);
+  }
+  
+  /* Product card hover effects */
+  .product-card {
+    @apply transition-all duration-500 ease-out;
+  }
+  
+  .product-card:hover {
+    @apply shadow-hover;
+    transform: translateY(-4px);
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Remove scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
