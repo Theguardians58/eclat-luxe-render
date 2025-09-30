@@ -1,12 +1,26 @@
 import { Product } from '@/store/useStore';
 
+// Import product images
+import product1 from '@/assets/product-1.jpg';
+import product2 from '@/assets/product-2.jpg';
+import product3 from '@/assets/product-3.jpg';
+import product4 from '@/assets/product-4.jpg';
+import product5 from '@/assets/product-5.jpg';
+import product6 from '@/assets/product-6.jpg';
+import product7 from '@/assets/product-7.jpg';
+import product8 from '@/assets/product-8.jpg';
+import product9 from '@/assets/product-9.jpg';
+import product10 from '@/assets/product-10.jpg';
+import product11 from '@/assets/product-11.jpg';
+import product12 from '@/assets/product-12.jpg';
+
 export const sampleProducts: Product[] = [
   {
     id: '1',
     name: 'Midnight Satin Bralette',
     price: 125,
     originalPrice: 160,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product1, product1, product1],
     colors: ['Black', 'Ivory', 'Deep Navy'],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     materials: ['Silk Satin', 'French Lace'],
@@ -22,7 +36,7 @@ export const sampleProducts: Product[] = [
     id: '2',
     name: 'Valencia Lace Teddy',
     price: 195,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product2, product2],
     colors: ['Black', 'Champagne', 'Burgundy'],
     sizes: ['XS', 'S', 'M', 'L'],
     materials: ['Chantilly Lace', 'Silk'],
@@ -38,7 +52,7 @@ export const sampleProducts: Product[] = [
     name: 'Parisian Dreams Set',
     price: 280,
     originalPrice: 320,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product3, product3, product3],
     colors: ['Ivory', 'Blush', 'Black'],
     sizes: ['S', 'M', 'L', 'XL'],
     materials: ['French Lace', 'Silk Tulle'],
@@ -52,7 +66,7 @@ export const sampleProducts: Product[] = [
     id: '4',
     name: 'Silk Slip Dress',
     price: 350,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product4, product4],
     colors: ['Black', 'Ivory', 'Deep Emerald'],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     materials: ['100% Silk Charmeuse'],
@@ -66,7 +80,7 @@ export const sampleProducts: Product[] = [
     id: '5',
     name: 'Aurora Balconette Bra',
     price: 155,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product5, product5],
     colors: ['Black', 'Nude', 'Ivory'],
     sizes: ['32B', '32C', '34B', '34C', '34D', '36B', '36C', '36D'],
     materials: ['French Lace', 'Stretch Silk'],
@@ -81,7 +95,7 @@ export const sampleProducts: Product[] = [
     id: '6',
     name: 'Moonlight High-Waist Brief',
     price: 85,
-    images: ['/api/placeholder/400/600'],
+    images: [product6],
     colors: ['Black', 'Ivory', 'Soft Pink'],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     materials: ['Silk Jersey', 'Elastic Lace'],
@@ -96,7 +110,7 @@ export const sampleProducts: Product[] = [
     name: 'Venetian Kimono Robe',
     price: 225,
     originalPrice: 275,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product7, product7],
     colors: ['Black', 'Champagne', 'Deep Navy'],
     sizes: ['S/M', 'L/XL'],
     materials: ['Silk Satin', 'Lace Trim'],
@@ -110,7 +124,7 @@ export const sampleProducts: Product[] = [
     id: '8',
     name: 'Noir Wireless Bralette',
     price: 95,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product8, product8],
     colors: ['Black', 'Charcoal'],
     sizes: ['XS', 'S', 'M', 'L'],
     materials: ['Stretch Lace', 'Modal'],
@@ -124,7 +138,7 @@ export const sampleProducts: Product[] = [
     id: '9',
     name: 'Cashmere Sleep Set',
     price: 450,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product9, product9],
     colors: ['Ivory', 'Soft Gray', 'Blush'],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     materials: ['100% Cashmere'],
@@ -139,7 +153,7 @@ export const sampleProducts: Product[] = [
     id: '10',
     name: 'Crystal Embellished Thong',
     price: 75,
-    images: ['/api/placeholder/400/600'],
+    images: [product10],
     colors: ['Black', 'Ivory'],
     sizes: ['XS', 'S', 'M', 'L'],
     materials: ['Silk', 'Swarovski Crystals'],
@@ -153,7 +167,7 @@ export const sampleProducts: Product[] = [
     id: '11',
     name: 'Bella Push-Up Bra',
     price: 175,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product11, product11],
     colors: ['Black', 'Nude', 'Deep Red'],
     sizes: ['32A', '32B', '34A', '34B', '34C', '36B', '36C'],
     materials: ['French Lace', 'Memory Foam'],
@@ -167,7 +181,7 @@ export const sampleProducts: Product[] = [
     id: '12',
     name: 'Ethereal Long Robe',
     price: 395,
-    images: ['/api/placeholder/400/600', '/api/placeholder/400/600', '/api/placeholder/400/600'],
+    images: [product12, product12, product12],
     colors: ['Ivory', 'Champagne'],
     sizes: ['S/M', 'L/XL'],
     materials: ['Silk Chiffon', 'Beaded Details'],
