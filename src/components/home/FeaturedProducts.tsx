@@ -4,9 +4,19 @@ import { Button } from '@/components/ui/enhanced-button';
 import { sampleProducts } from '@/data/products';
 import { useStore } from '@/store/useStore';
 import featuredImage from '@/assets/featured-products.jpg';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function FeaturedProducts() {
   const { addToWishlist, isInWishlist, removeFromWishlist } = useStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], [-100, 100]);
   
   const featuredProducts = sampleProducts.filter(product => product.featured).slice(0, 3);
 
@@ -26,16 +36,17 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="py-20 lg:py-28">
+    <section ref={containerRef} className="py-20 lg:py-28">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Image */}
-          <div className="relative group">
+          <div className="relative group overflow-hidden">
             <div className="aspect-square overflow-hidden rounded-lg bg-subtle shadow-soft">
-              <img
+              <motion.img
                 src={featuredImage}
                 alt="Featured Collection"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover"
+                style={{ x }}
               />
             </div>
           </div>

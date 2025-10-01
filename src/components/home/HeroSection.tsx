@@ -2,16 +2,39 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
 import heroImage from '@/assets/hero-image.jpg';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useEffect } from 'react';
 
 export default function HeroSection() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const offsetX = useTransform(mouseX, [0, window.innerWidth], [-20, 20]);
+  const offsetY = useTransform(mouseY, [0, window.innerHeight], [-20, 20]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 gradient-hero">
-        <img
+        <motion.img
           src={heroImage}
           alt="Éclat Lingerie Collection"
           className="w-full h-full object-cover opacity-60"
+          style={{
+            x: offsetX,
+            y: offsetY,
+            scale: 1.1,
+          }}
         />
         <div className="absolute inset-0 bg-white/20" />
       </div>
