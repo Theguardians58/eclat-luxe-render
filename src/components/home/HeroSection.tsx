@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
 import heroImage from '@/assets/hero-image.jpg';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { useEffect } from 'react';
+import heroWalking from '@/assets/hero-walking.jpg';
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function HeroSection() {
+  const [showWalking, setShowWalking] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -22,20 +24,35 @@ export default function HeroSection() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWalking(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 gradient-hero">
-        <motion.img
-          src={heroImage}
-          alt="Éclat Lingerie Collection"
-          className="w-full h-full object-cover opacity-60"
-          style={{
-            x: offsetX,
-            y: offsetY,
-            scale: 1.1,
-          }}
-        />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={showWalking ? 'walking' : 'static'}
+            src={showWalking ? heroWalking : heroImage}
+            alt="Éclat Lingerie Collection"
+            className="w-full h-full object-cover opacity-60"
+            style={{
+              x: offsetX,
+              y: offsetY,
+              scale: 1.1,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-white/20" />
       </div>
 
