@@ -9,6 +9,9 @@ import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 import SizeGuide from "./pages/SizeGuide";
+import Wishlist from "./pages/Wishlist";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -24,10 +27,10 @@ const App = () => (
             <Route path="/shop" element={<Shop />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/collections" element={<Shop />} />
-            <Route path="/about" element={<div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl font-serif">About - Coming Soon</h1></div>} />
+            <Route path="/about" element={<About />} />
             <Route path="/size-guide" element={<SizeGuide />} />
-            <Route path="/contact" element={<div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl font-serif">Contact - Coming Soon</h1></div>} />
-            <Route path="/wishlist" element={<div className="min-h-screen flex items-center justify-center"><h1 className="text-2xl font-serif">Wishlist - Coming Soon</h1></div>} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
