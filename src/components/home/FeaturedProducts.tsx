@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/enhanced-button';
 import { sampleProducts } from '@/data/products';
 import { useStore } from '@/store/useStore';
 import featuredImage from '@/assets/featured-products.jpg';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 export default function FeaturedProducts() {
+  const prefersReducedMotion = useReducedMotion();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.3 });
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -17,6 +20,7 @@ export default function FeaturedProducts() {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [-100, 100]);
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
   
   const featuredProducts = sampleProducts.filter(product => product.featured).slice(0, 3);
 
@@ -40,20 +44,38 @@ export default function FeaturedProducts() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Image */}
-          <div className="relative group overflow-hidden">
+          <motion.div 
+            className="relative group overflow-hidden"
+            initial={prefersReducedMotion ? false : { opacity: 0, x: -50 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <div className="aspect-square overflow-hidden rounded-lg bg-subtle shadow-soft">
               <motion.img
                 src={featuredImage}
                 alt="Featured Collection"
                 className="w-full h-full object-cover"
-                style={{ x }}
+                style={{ 
+                  x: prefersReducedMotion ? 0 : x,
+                  scale: 1.1
+                }}
+                whileHover={prefersReducedMotion ? {} : { scale: 1.15 }}
+                transition={{ duration: 0.6 }}
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
+          <motion.div 
+            className="space-y-8"
+            style={{ y: prefersReducedMotion ? 0 : y }}
+          >
+            <motion.div 
+              className="space-y-4"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               <h2 className="text-3xl lg:text-4xl font-serif font-light text-foreground tracking-tight">
                 Featured Collection
               </h2>
@@ -61,15 +83,18 @@ export default function FeaturedProducts() {
                 Discover our most coveted pieces, each one a testament to 
                 timeless elegance and exceptional craftsmanship.
               </p>
-            </div>
+            </motion.div>
 
             {/* Product Grid */}
             <div className="space-y-6">
               {featuredProducts.map((product, index) => (
-                <div
+                <motion.div
                   key={product.id}
                   className="flex items-center space-x-4 p-4 rounded-lg hover:bg-subtle transition-colors product-card"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, x: 30 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  whileHover={prefersReducedMotion ? {} : { scale: 1.02, x: 4 }}
                 >
                   <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-subtle">
                     <img
@@ -122,16 +147,22 @@ export default function FeaturedProducts() {
                       }`}
                     />
                   </Button>
-                </div>
+                </motion.div>
               ))}
             </div>
 
-            <Link to="/shop">
-              <Button variant="premium" size="lg" className="w-full sm:w-auto">
-                View All Products
-              </Button>
-            </Link>
-          </div>
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link to="/shop">
+                <Button variant="premium" size="lg" className="w-full sm:w-auto">
+                  View All Products
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
