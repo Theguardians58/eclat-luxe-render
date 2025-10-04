@@ -12,6 +12,8 @@ import SizeGuide from "./pages/SizeGuide";
 import Wishlist from "./pages/Wishlist";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
             <Route path="/size-guide" element={<SizeGuide />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

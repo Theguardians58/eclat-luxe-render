@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, ShoppingBag, Heart, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, User } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
 import { useStore } from '@/store/useStore';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
 const navigation = [
@@ -16,6 +17,7 @@ const navigation = [
 export default function Header() {
   const location = useLocation();
   const { cartCount, setCartOpen, setSearchOpen, mobileMenuOpen, setMobileMenuOpen } = useStore();
+  const { user } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Handle scroll effect
@@ -106,6 +108,13 @@ export default function Header() {
               )}
               <span className="sr-only">Shopping cart</span>
             </Button>
+
+            <Link to={user ? "/account" : "/auth"}>
+              <Button variant="ghost" size="icon" className="hover:bg-subtle transition-smooth">
+                <User className="h-5 w-5" />
+                <span className="sr-only">{user ? "Account" : "Sign In"}</span>
+              </Button>
+            </Link>
           </div>
         </div>
 
