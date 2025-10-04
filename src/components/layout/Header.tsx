@@ -76,7 +76,7 @@ export default function Header() {
           </nav>
 
           {/* Action buttons */}
-          <div className="flex items-center space-x-2 lg:space-x-4">
+          <div className="flex items-center space-x-1 lg:space-x-2">
             <Button
               variant="ghost"
               size="icon"
