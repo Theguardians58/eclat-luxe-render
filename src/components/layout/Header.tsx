@@ -38,22 +38,25 @@ export default function Header() {
     )}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          {/* Left section: Mobile menu + Logo */}
+          <div className="flex items-center space-x-4">
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
 
-          {/* Logo */}
-          <Link to="/" className="flex-shrink-0 pl-4">
-            <h1 className="text-3xl lg:text-4xl font-display font-bold text-foreground tracking-wide italic">
-              Éclat
-            </h1>
-          </Link>
+            {/* Logo */}
+            <Link to="/" className="flex-shrink-0">
+              <h1 className="text-3xl lg:text-4xl font-display font-bold text-foreground tracking-wide italic">
+                Éclat
+              </h1>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
