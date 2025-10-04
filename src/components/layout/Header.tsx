@@ -50,8 +50,8 @@ export default function Header() {
 
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <h1 className="text-xl lg:text-2xl font-serif font-semibold text-foreground tracking-tight">
-              Éclat — Lingerie Fine
+            <h1 className="text-2xl lg:text-3xl font-serif font-semibold text-foreground tracking-tight">
+              Éclat
             </h1>
           </Link>
 
