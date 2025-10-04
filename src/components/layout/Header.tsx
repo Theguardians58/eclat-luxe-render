@@ -49,8 +49,8 @@ export default function Header() {
           </Button>
 
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
-            <h1 className="text-3xl lg:text-4xl font-display font-light text-foreground tracking-wide italic">
+          <Link to="/" className="flex-shrink-0 pl-4">
+            <h1 className="text-3xl lg:text-4xl font-display font-bold text-foreground tracking-wide italic">
               Éclat
             </h1>
           </Link>
