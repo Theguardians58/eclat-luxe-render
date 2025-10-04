@@ -1,21 +1,26 @@
+// src/App.tsx
+
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
-import NotFound from "./pages/NotFound";
 import SizeGuide from "./pages/SizeGuide";
 import Wishlist from "./pages/Wishlist";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
+import NotFound from "./pages/NotFound";
+
 import { ConsentBanner } from "./components/tracking/ConsentBanner";
+import { useAutoSync } from "./hooks/useAutoSync";
 import { trackingService } from "./services/trackingService";
 
 const queryClient = new QueryClient();
@@ -23,28 +28,44 @@ const queryClient = new QueryClient();
 const App = () => {
   const [consentGiven, setConsentGiven] = useState(false);
 
+  // On mount: check stored consent and initialize tracking
   useEffect(() => {
-    // Check if consent was already given
-    const consent = localStorage.getItem('eclat-consent');
-    if (consent) {
+    const stored = localStorage.getItem("eclat-consent");
+    if (stored) {
+      const consents = JSON.parse(stored);
       setConsentGiven(true);
-      initializeTracking(JSON.parse(consent));
-    }
-  }, []);
 
-  const initializeTracking = async (consents: { location: boolean; analytics: boolean }) => {
-    if (consents.analytics) {
-      await trackingService.trackUserSession({
+      // Record previous consents in database if needed
+      trackingService.recordConsent("analytics", consents.analytics);
+      trackingService.recordConsent("location", consents.location);
+
+      // Initial session tracking
+      trackingService.trackUserSession({
         requestLocation: consents.location,
         pageUrl: window.location.href,
         referrer: document.referrer,
       });
     }
-  };
+  }, []);
 
-  const handleConsentGiven = (consents: { location: boolean; analytics: boolean }) => {
+  // Start automatic background syncing after consent
+  if (consentGiven) {
+    useAutoSync(); 
+  }
+
+  // Handle consent acceptance from banner
+  const handleConsent = (consents: { location: boolean; analytics: boolean }) => {
+    localStorage.setItem("eclat-consent", JSON.stringify(consents));
     setConsentGiven(true);
-    initializeTracking(consents);
+
+    trackingService.recordConsent("analytics", consents.analytics);
+    trackingService.recordConsent("location", consents.location);
+
+    trackingService.trackUserSession({
+      requestLocation: consents.location,
+      pageUrl: window.location.href,
+      referrer: document.referrer,
+    });
   };
 
   return (
@@ -67,7 +88,7 @@ const App = () => {
           </Layout>
           <Toaster />
           <Sonner />
-          {!consentGiven && <ConsentBanner onConsentGiven={handleConsentGiven} />}
+          {!consentGiven && <ConsentBanner onConsentGiven={handleConsent} />}
         </TooltipProvider>
       </BrowserRouter>
     </QueryClientProvider>
@@ -75,4 +96,4 @@ const App = () => {
 };
 
 export default App;
-                                         
+        
