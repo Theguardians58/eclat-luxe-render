@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         'serif': ['Playfair Display', 'Georgia', 'serif'],
         'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        'display': ['Cormorant Garamond', 'Playfair Display', 'serif'],
       },
       colors: {
         // Éclat brand colors
