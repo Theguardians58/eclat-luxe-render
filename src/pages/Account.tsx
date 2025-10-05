@@ -158,34 +158,34 @@ export default function Account() {
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="max-w-md mx-auto">
-        {/* Purple Header */}
-        <div className="relative bg-gradient-to-br from-purple-600 to-purple-500 h-48 rounded-b-[3rem] flex items-center justify-center">
+        {/* Header */}
+        <div className="relative gradient-hover h-48 rounded-b-[3rem] flex items-center justify-center">
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 left-4 text-white hover:bg-white/20"
+            className="absolute top-4 left-4 text-primary-foreground hover:bg-white/20"
             onClick={() => navigate('/')}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-white text-2xl font-medium">{fullName || 'Your Profile'}</h1>
+          <h1 className="text-primary-foreground text-2xl font-display">{fullName || 'Your Profile'}</h1>
         </div>
 
         {/* Avatar - Overlapping header and content */}
         <div className="flex justify-center -mt-16 mb-6 relative">
           <div className="relative">
-            <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
+            <Avatar className="h-32 w-32 border-4 border-background shadow-intense">
               <AvatarImage src={avatarUrl} alt={fullName} />
-              <AvatarFallback className="text-3xl bg-white text-purple-600">
+              <AvatarFallback className="text-3xl bg-card text-foreground">
                 {fullName?.[0]?.toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
             {isEditing && (
               <Label
                 htmlFor="avatar-upload"
-                className="absolute bottom-0 right-0 cursor-pointer bg-purple-600 rounded-full p-2 hover:bg-purple-700 transition-colors"
+                className="absolute bottom-0 right-0 cursor-pointer bg-accent rounded-full p-2 hover:bg-primary transition-smooth"
               >
-                <Loader2 className={cn("h-4 w-4 text-white", uploading && "animate-spin")} />
+                <Loader2 className={cn("h-4 w-4 text-accent-foreground", uploading && "animate-spin")} />
                 <Input
                   id="avatar-upload"
                   type="file"
@@ -200,7 +200,7 @@ export default function Account() {
         </div>
 
         {/* Profile Fields */}
-        <div className="bg-white mx-4 rounded-2xl shadow-sm">
+        <div className="bg-card mx-4 rounded-2xl shadow-soft">
           <div className="divide-y divide-border">
             {/* Name Field */}
             <div className="flex items-center px-6 py-4 space-x-4">
@@ -302,7 +302,7 @@ export default function Account() {
                 <Button
                   onClick={updateProfile}
                   disabled={loading}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full h-12"
+                  className="flex-1 bg-primary hover:bg-accent text-primary-foreground rounded-full h-12"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
                 </Button>
@@ -317,7 +317,7 @@ export default function Account() {
             ) : (
               <Button
                 onClick={() => setIsEditing(true)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full h-12 text-base"
+                className="w-full bg-primary hover:bg-accent text-primary-foreground rounded-full h-12 text-base"
               >
                 Edit profile
               </Button>
