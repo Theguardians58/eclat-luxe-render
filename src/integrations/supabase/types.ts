@@ -235,6 +235,72 @@ export type Database = {
         }
         Relationships: []
       }
+      user_tracking: {
+        Row: {
+          browser: string | null
+          browser_version: string | null
+          city: string | null
+          cookies: Json | null
+          country: string | null
+          created_at: string
+          device_type: string | null
+          id: string
+          ip_address: string | null
+          language: string | null
+          latitude: number | null
+          longitude: number | null
+          operating_system: string | null
+          referrer: string | null
+          screen_resolution: string | null
+          session_id: string
+          timezone: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          browser?: string | null
+          browser_version?: string | null
+          city?: string | null
+          cookies?: Json | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          ip_address?: string | null
+          language?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          operating_system?: string | null
+          referrer?: string | null
+          screen_resolution?: string | null
+          session_id: string
+          timezone?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          browser?: string | null
+          browser_version?: string | null
+          city?: string | null
+          cookies?: Json | null
+          country?: string | null
+          created_at?: string
+          device_type?: string | null
+          id?: string
+          ip_address?: string | null
+          language?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          operating_system?: string | null
+          referrer?: string | null
+          screen_resolution?: string | null
+          session_id?: string
+          timezone?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       wishlist_items: {
         Row: {
           created_at: string

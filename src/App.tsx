@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import { useUserTracking } from "./hooks/useUserTracking";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
@@ -18,9 +19,15 @@ import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
+const AppContent = () => {
+  useUserTracking();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <AppContent />
       <Toaster />
       <Sonner />
       <BrowserRouter>
