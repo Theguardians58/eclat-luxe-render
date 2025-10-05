@@ -4,18 +4,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2, User, Calendar as CalendarIcon, Phone, Instagram, Mail, Eye, ArrowLeft } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default function Account() {
   const { user, loading: authLoading, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [birthday, setBirthday] = useState<Date | undefined>();
+  const [phone, setPhone] = useState('');
+  const [instagram, setInstagram] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -35,7 +42,7 @@ export default function Account() {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, avatar_url')
+        .select('full_name, avatar_url, birthday, phone, instagram_account')
         .eq('id', user!.id)
         .single();
 
@@ -44,6 +51,9 @@ export default function Account() {
       if (data) {
         setFullName(data.full_name || '');
         setAvatarUrl(data.avatar_url || '');
+        setBirthday(data.birthday ? new Date(data.birthday) : undefined);
+        setPhone(data.phone || '');
+        setInstagram(data.instagram_account || '');
       }
     } catch (error: any) {
       toast({
@@ -61,7 +71,12 @@ export default function Account() {
       setLoading(true);
       const { error } = await supabase
         .from('profiles')
-        .update({ full_name: fullName })
+        .update({ 
+          full_name: fullName,
+          birthday: birthday ? format(birthday, 'yyyy-MM-dd') : null,
+          phone: phone,
+          instagram_account: instagram
+        })
         .eq('id', user!.id);
 
       if (error) throw error;
@@ -70,6 +85,7 @@ export default function Account() {
         title: "Success",
         description: "Profile updated successfully",
       });
+      setIsEditing(false);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -140,61 +156,186 @@ export default function Account() {
   }
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-12">
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Settings</CardTitle>
-          <CardDescription>Manage your profile information</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-20 w-20">
+    <div className="min-h-screen bg-muted/30">
+      <div className="max-w-md mx-auto">
+        {/* Purple Header */}
+        <div className="relative bg-gradient-to-br from-purple-600 to-purple-500 h-48 rounded-b-[3rem] flex items-center justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-4 left-4 text-white hover:bg-white/20"
+            onClick={() => navigate('/')}
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-white text-2xl font-medium">{fullName || 'Your Profile'}</h1>
+        </div>
+
+        {/* Avatar - Overlapping header and content */}
+        <div className="flex justify-center -mt-16 mb-6 relative">
+          <div className="relative">
+            <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
               <AvatarImage src={avatarUrl} alt={fullName} />
-              <AvatarFallback>{fullName?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
+              <AvatarFallback className="text-3xl bg-white text-purple-600">
+                {fullName?.[0]?.toUpperCase() || 'U'}
+              </AvatarFallback>
             </Avatar>
-            <div>
-              <Label htmlFor="avatar-upload" className="cursor-pointer">
-                <div className="flex items-center space-x-2 text-sm text-primary hover:underline">
-                  <Upload className="h-4 w-4" />
-                  <span>{uploading ? 'Uploading...' : 'Upload Photo'}</span>
-                </div>
+            {isEditing && (
+              <Label
+                htmlFor="avatar-upload"
+                className="absolute bottom-0 right-0 cursor-pointer bg-purple-600 rounded-full p-2 hover:bg-purple-700 transition-colors"
+              >
+                <Loader2 className={cn("h-4 w-4 text-white", uploading && "animate-spin")} />
+                <Input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={uploadAvatar}
+                  disabled={uploading}
+                  className="hidden"
+                />
               </Label>
-              <Input
-                id="avatar-upload"
-                type="file"
-                accept="image/*"
-                onChange={uploadAvatar}
-                disabled={uploading}
-                className="hidden"
-              />
+            )}
+          </div>
+        </div>
+
+        {/* Profile Fields */}
+        <div className="bg-white mx-4 rounded-2xl shadow-sm">
+          <div className="divide-y divide-border">
+            {/* Name Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <User className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              {isEditing ? (
+                <Input
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Full Name"
+                  className="border-0 focus-visible:ring-0 p-0"
+                />
+              ) : (
+                <span className="text-muted-foreground">{fullName || 'Add your name'}</span>
+              )}
+            </div>
+
+            {/* Birthday Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <CalendarIcon className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              {isEditing ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "justify-start text-left font-normal p-0 h-auto hover:bg-transparent",
+                        !birthday && "text-muted-foreground"
+                      )}
+                    >
+                      {birthday ? format(birthday, "PPP") : "Select birthday"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={birthday}
+                      onSelect={setBirthday}
+                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                      initialFocus
+                      className="pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <span className="text-muted-foreground">
+                  {birthday ? format(birthday, "PPP") : 'Add birthday'}
+                </span>
+              )}
+            </div>
+
+            {/* Phone Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <Phone className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              {isEditing ? (
+                <Input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Phone number"
+                  type="tel"
+                  className="border-0 focus-visible:ring-0 p-0"
+                />
+              ) : (
+                <span className="text-muted-foreground">{phone || 'Add phone number'}</span>
+              )}
+            </div>
+
+            {/* Instagram Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <Instagram className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              {isEditing ? (
+                <Input
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="Instagram account"
+                  className="border-0 focus-visible:ring-0 p-0"
+                />
+              ) : (
+                <span className="text-muted-foreground">{instagram || 'Add Instagram'}</span>
+              )}
+            </div>
+
+            {/* Email Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <Mail className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              <span className="text-muted-foreground">{user?.email}</span>
+            </div>
+
+            {/* Password Field */}
+            <div className="flex items-center px-6 py-4 space-x-4">
+              <Eye className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              <span className="text-muted-foreground">••••••••</span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={user?.email || ''} disabled />
+          {/* Edit Profile Button */}
+          <div className="px-6 py-6">
+            {isEditing ? (
+              <div className="flex gap-2">
+                <Button
+                  onClick={updateProfile}
+                  disabled={loading}
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full h-12"
+                >
+                  {loading ? 'Saving...' : 'Save Changes'}
+                </Button>
+                <Button
+                  onClick={() => setIsEditing(false)}
+                  variant="outline"
+                  className="rounded-full h-12"
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={() => setIsEditing(true)}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full h-12 text-base"
+              >
+                Edit profile
+              </Button>
+            )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
-            <Input
-              id="fullName"
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
-
-          <div className="flex space-x-2">
-            <Button onClick={updateProfile} disabled={loading}>
-              {loading ? 'Saving...' : 'Save Changes'}
-            </Button>
-            <Button variant="outline" onClick={handleSignOut}>
+          {/* Sign Out Button */}
+          <div className="px-6 pb-6">
+            <Button
+              onClick={handleSignOut}
+              variant="outline"
+              className="w-full rounded-full h-12"
+            >
               Sign Out
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
