@@ -54,7 +54,7 @@ export default function Welcome() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-xl md:text-3xl text-muted-foreground font-light mb-12 max-w-2xl mx-auto leading-relaxed"
         >
-          Step into a world of premium footwear designed for those who value style, comfort, and quality
+          Step into a world of premium lingerie designed for those who value elegance, comfort, and confidence
         </motion.p>
 
         <motion.div
