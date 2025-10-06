@@ -16,6 +16,8 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
+import Welcome from "./pages/Welcome";
+import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
@@ -24,32 +26,51 @@ const AppContent = () => {
   return null;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AppContent />
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/collections" element={<Shop />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/size-guide" element={<SizeGuide />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [shouldShowWelcome, setShouldShowWelcome] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    setShouldShowWelcome(!hasVisited);
+    setIsChecking(false);
+  }, []);
+
+  if (isChecking) {
+    return null;
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AppContent />
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <ScrollToTop />
+          {shouldShowWelcome ? (
+            <Welcome />
+          ) : (
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/collections" element={<Shop />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/size-guide" element={<SizeGuide />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          )}
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
