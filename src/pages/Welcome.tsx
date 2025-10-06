@@ -1,83 +1,70 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import heroBackground from '@/assets/hero-background.gif';
 
 export default function Welcome() {
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     // Mark as visited
     localStorage.setItem('hasVisited', 'true');
 
-    // Countdown timer
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          navigate('/');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Auto-redirect after 3 seconds
+    const timer = setTimeout(() => {
+      navigate('/');
+    }, 3000);
 
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src={heroBackground}
+          alt=""
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90" />
+      </div>
+
+      {/* Content */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        className="text-center px-6 max-w-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 text-center px-6 max-w-4xl"
       >
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent"
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="text-6xl md:text-8xl font-bold mb-8 tracking-tight"
         >
-          Welcome to Our Store
+          <span className="bg-gradient-to-r from-foreground via-foreground to-muted-foreground bg-clip-text text-transparent">
+            Welcome
+          </span>
         </motion.h1>
         
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-xl md:text-2xl text-muted-foreground mb-8"
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="text-xl md:text-3xl text-muted-foreground font-light mb-12 max-w-2xl mx-auto leading-relaxed"
         >
-          Discover premium footwear crafted for style and comfort
+          Step into a world of premium footwear designed for those who value style, comfort, and quality
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex items-center justify-center gap-2 text-lg text-muted-foreground"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="flex justify-center"
         >
-          <span>Redirecting in</span>
-          <motion.span
-            key={countdown}
-            initial={{ scale: 1.2, color: 'hsl(var(--primary))' }}
-            animate={{ scale: 1 }}
-            className="font-bold text-2xl"
-          >
-            {countdown}
-          </motion.span>
-          <span>seconds...</span>
+          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
         </motion.div>
-
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          onClick={() => navigate('/')}
-          className="mt-8 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-        >
-          Skip to Store
-        </motion.button>
       </motion.div>
     </div>
   );
