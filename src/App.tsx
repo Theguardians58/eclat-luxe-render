@@ -17,6 +17,11 @@ import About from "./pages/About";
 import Auth from "./pages/Auth";
 import Account from "./pages/Account";
 import Welcome from "./pages/Welcome";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Sustainability from "./pages/Sustainability";
+import Careers from "./pages/Careers";
+import FAQ from "./pages/FAQ";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
@@ -63,6 +68,11 @@ const App = () => {
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/account" element={<Account />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/sustainability" element={<Sustainability />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
