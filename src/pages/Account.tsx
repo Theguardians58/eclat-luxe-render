@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Loader2, User, Calendar as CalendarIcon, Phone, Instagram, Mail, Eye, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { logError } from '@/utils/errorLogger';
 
 export default function Account() {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -56,6 +57,11 @@ export default function Account() {
         setInstagram(data.instagram_account || '');
       }
     } catch (error: any) {
+      logError(error, { 
+        errorType: 'network', 
+        additionalInfo: { operation: 'getProfile' } 
+      });
+
       toast({
         title: "Error",
         description: error.message,
@@ -87,6 +93,11 @@ export default function Account() {
       });
       setIsEditing(false);
     } catch (error: any) {
+      logError(error, { 
+        errorType: 'network', 
+        additionalInfo: { operation: 'updateProfile' } 
+      });
+
       toast({
         title: "Error",
         description: error.message,
@@ -132,6 +143,11 @@ export default function Account() {
         description: "Avatar updated successfully",
       });
     } catch (error: any) {
+      logError(error, { 
+        errorType: 'network', 
+        additionalInfo: { operation: 'uploadAvatar' } 
+      });
+
       toast({
         title: "Error",
         description: error.message,
