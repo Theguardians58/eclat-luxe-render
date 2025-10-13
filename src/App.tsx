@@ -23,6 +23,7 @@ import Sustainability from "./pages/Sustainability";
 import Careers from "./pages/Careers";
 import FAQ from "./pages/FAQ";
 import { useEffect, useState } from "react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -51,33 +52,49 @@ const App = () => {
         <AppContent />
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          {shouldShowWelcome ? (
-            <Welcome />
-          ) : (
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/collections" element={<Shop />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/size-guide" element={<SizeGuide />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/sustainability" element={<Sustainability />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          )}
-        </BrowserRouter>
+        <ErrorBoundary>
+          <BrowserRouter>
+            <ScrollToTop />
+            {shouldShowWelcome ? (
+              <Welcome />
+            ) : (
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/collections" element={<Shop />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/size-guide" element={<SizeGuide />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route 
+                    path="/auth" 
+                    element={
+                      <ErrorBoundary>
+                        <Auth />
+                      </ErrorBoundary>
+                    } 
+                  />
+                  <Route 
+                    path="/account" 
+                    element={
+                      <ErrorBoundary>
+                        <Account />
+                      </ErrorBoundary>
+                    } 
+                  />
+                  <Route path="/terms" element={<TermsOfService />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/sustainability" element={<Sustainability />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+            )}
+          </BrowserRouter>
+        </ErrorBoundary>
       </TooltipProvider>
     </QueryClientProvider>
   );
