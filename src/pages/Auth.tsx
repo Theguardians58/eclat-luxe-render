@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
+import { logError } from '@/utils/errorLogger';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -41,6 +42,11 @@ export default function Auth() {
     });
 
     if (error) {
+      logError(error, { 
+        errorType: 'auth', 
+        additionalInfo: { operation: 'signUp' } 
+      });
+
       toast({
         title: "Error",
         description: error.message,
@@ -65,6 +71,11 @@ export default function Auth() {
     });
 
     if (error) {
+      logError(error, { 
+        errorType: 'auth', 
+        additionalInfo: { operation: 'signIn' } 
+      });
+
       toast({
         title: "Error",
         description: error.message,
