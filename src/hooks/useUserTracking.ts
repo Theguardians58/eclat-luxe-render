@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { logError } from '@/utils/errorLogger';
 
 // Generate or retrieve session ID
 const getSessionId = (): string => {
@@ -111,7 +112,10 @@ export const useUserTracking = () => {
           await sendTrackingData(trackingData);
         }
       } catch (error) {
-        console.error('Tracking error:', error);
+        logError(error as Error, { 
+          errorType: 'network', 
+          additionalInfo: { operation: 'trackUser' } 
+        });
       }
     };
 
@@ -125,7 +129,10 @@ export const useUserTracking = () => {
         if (error) throw error;
         console.log('User tracked successfully:', result);
       } catch (error) {
-        console.error('Failed to send tracking data:', error);
+        logError(error as Error, { 
+          errorType: 'network', 
+          additionalInfo: { operation: 'sendTrackingData' } 
+        });
       }
     };
 
