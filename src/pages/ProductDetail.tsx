@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Heart, Star, Plus, Minus, ShoppingBag, ArrowLeft, Truck, Shield, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
@@ -7,6 +7,7 @@ import { sampleProducts } from '@/data/products';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useFlyingCart, FlyingCartAnimation } from '@/components/cart/FlyingCartAnimation';
 
 // Lazy load 3D viewer for performance
 const ProductViewer3D = lazy(() => import('@/components/product/ProductViewer3D'));
@@ -16,6 +17,8 @@ export default function ProductDetail() {
   const product = sampleProducts.find(p => p.id === id);
   
   const { addToCart, addToWishlist, isInWishlist, removeFromWishlist } = useStore();
+  const { flyingItems, triggerAnimation } = useFlyingCart();
+  const productImageRef = useRef<HTMLDivElement>(null);
   
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
@@ -46,12 +49,23 @@ export default function ProductDetail() {
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) return;
     
-    addToCart({
-      productId: product.id,
-      size: selectedSize,
-      color: selectedColor,
-      price: product.price,
-    });
+    // Trigger flying animation
+    if (productImageRef.current) {
+      triggerAnimation(
+        product.images[currentImageIndex] || product.images[0],
+        productImageRef.current
+      );
+    }
+    
+    // Add to cart after a short delay
+    setTimeout(() => {
+      addToCart({
+        productId: product.id,
+        size: selectedSize,
+        color: selectedColor,
+        price: product.price,
+      });
+    }, 100);
   };
 
   const handleWishlistToggle = () => {
@@ -66,6 +80,7 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+      <FlyingCartAnimation items={flyingItems} onComplete={() => {}} />
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
@@ -83,7 +98,7 @@ export default function ProductDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Product Images / 3D Viewer */}
           <div className="space-y-4">
-            <div className="aspect-[4/5] bg-subtle rounded-lg overflow-hidden">
+            <div ref={productImageRef} className="aspect-[4/5] bg-subtle rounded-lg overflow-hidden">
               {view3D ? (
                 <Suspense fallback={
                   <div className="w-full h-full flex items-center justify-center bg-subtle">

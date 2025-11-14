@@ -102,6 +102,7 @@ export default function Header() {
               size="icon"
               onClick={() => setCartOpen(true)}
               className="relative hover:bg-subtle transition-smooth"
+              data-cart-button
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
