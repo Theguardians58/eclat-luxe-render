@@ -25,9 +25,9 @@ export default function Welcome() {
         <img
           src={heroBackground}
           alt=""
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/85 to-background/80" />
       </div>
 
       {/* Content */}
