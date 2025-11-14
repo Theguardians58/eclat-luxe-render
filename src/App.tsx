@@ -22,6 +22,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Sustainability from "./pages/Sustainability";
 import Careers from "./pages/Careers";
 import FAQ from "./pages/FAQ";
+import CareInstructions from "./pages/CareInstructions";
+import ShippingReturns from "./pages/ShippingReturns";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
@@ -73,6 +75,8 @@ const App = () => {
                 <Route path="/sustainability" element={<Sustainability />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/faq" element={<FAQ />} />
+                <Route path="/care" element={<CareInstructions />} />
+                <Route path="/shipping" element={<ShippingReturns />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
