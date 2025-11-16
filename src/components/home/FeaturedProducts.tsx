@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Heart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
-import { sampleProducts } from '@/data/products';
+import { useProducts } from '@/hooks/useProducts';
 import { useStore } from '@/store/useStore';
 import featuredImage from '@/assets/featured-products.jpg';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
@@ -11,6 +11,7 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion';
 export default function FeaturedProducts() {
   const prefersReducedMotion = useReducedMotion();
   const { addToWishlist, isInWishlist, removeFromWishlist } = useStore();
+  const { data: products } = useProducts();
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.3 });
   
@@ -22,7 +23,7 @@ export default function FeaturedProducts() {
   const x = useTransform(scrollYProgress, [0, 1], [-100, 100]);
   const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
   
-  const featuredProducts = sampleProducts.filter(product => product.featured).slice(0, 3);
+  const featuredProducts = (products || []).filter(product => product.featured).slice(0, 3);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {

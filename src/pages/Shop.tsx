@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Star, Filter, X } from 'lucide-react';
+import { Heart, Star, Filter, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
 import { useStore } from '@/store/useStore';
-import { sampleProducts, categories, sizes, colors } from '@/data/products';
+import { categories, sizes, colors } from '@/data/products';
+import { useProducts } from '@/hooks/useProducts';
 import {
   Sheet,
   SheetContent,
@@ -19,9 +20,11 @@ export default function Shop() {
   const { filters, setFilters, addToWishlist, isInWishlist, removeFromWishlist } = useStore();
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'rating' | 'newest'>('newest');
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const { data: products, isLoading, error } = useProducts();
 
   const filteredProducts = useMemo(() => {
-    let filtered = [...sampleProducts];
+    if (!products) return [];
+    let filtered = [...products];
 
     // Category filter
     if (filters.category.length > 0) {
@@ -284,8 +287,21 @@ export default function Shop() {
 
           {/* Product Grid */}
           <div className="lg:col-span-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product, index) => (
+            {isLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center py-20">
+                <p className="text-muted-foreground">Error loading products. Please try again.</p>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="flex items-center justify-center py-20">
+                <p className="text-muted-foreground">No products found matching your criteria.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredProducts.map((product, index) => (
                 <div
                   key={product.id}
                   className="group relative bg-white rounded-lg shadow-soft overflow-hidden product-card"

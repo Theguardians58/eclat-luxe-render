@@ -1,9 +1,9 @@
 import { useState, lazy, Suspense, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Heart, Star, Plus, Minus, ShoppingBag, ArrowLeft, Truck, Shield, RotateCcw } from 'lucide-react';
+import { Heart, Star, Plus, Minus, ShoppingBag, ArrowLeft, Truck, Shield, RotateCcw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/enhanced-button';
 import { useStore } from '@/store/useStore';
-import { sampleProducts } from '@/data/products';
+import { useProduct } from '@/hooks/useProducts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,7 +14,7 @@ const ProductViewer3D = lazy(() => import('@/components/product/ProductViewer3D'
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
-  const product = sampleProducts.find(p => p.id === id);
+  const { data: product, isLoading, error } = useProduct(id);
   
   const { addToCart, addToWishlist, isInWishlist, removeFromWishlist } = useStore();
   const { flyingItems, triggerAnimation } = useFlyingCart();
@@ -26,13 +26,21 @@ export default function ProductDetail() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [view3D, setView3D] = useState(false);
 
-  if (!product) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-serif">Product not found</h1>
           <Link to="/shop">
-            <Button variant="hero">Return to Shop</Button>
+            <Button variant="default">Return to Shop</Button>
           </Link>
         </div>
       </div>
