@@ -3,6 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from '@/components/cart/CartDrawer';
 import SearchModal from '@/components/search/SearchModal';
+import ChatBot from '@/components/chat/ChatBot';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ export default function Layout({ children }: LayoutProps) {
       <Footer />
       <CartDrawer />
       <SearchModal />
+      <ChatBot />
     </div>
   );
 }
