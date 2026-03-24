@@ -74,7 +74,7 @@ export default function Shop() {
     }
 
     return filtered;
-  }, [filters, sortBy]);
+  }, [products, filters, sortBy]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
