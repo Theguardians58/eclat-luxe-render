@@ -379,12 +379,14 @@ export default function Shop() {
                         {product.colors.slice(0, 3).map((color, colorIndex) => (
                           <div
                             key={colorIndex}
-                            className={`w-4 h-4 rounded-full border border-border ${
-                              color === 'Black' ? 'bg-black' :
-                              color === 'White' || color === 'Ivory' ? 'bg-white' :
-                              color === 'Navy' || color === 'Deep Navy' ? 'bg-blue-900' :
-                              'bg-gray-300'
-                            }`}
+                            className="w-4 h-4 rounded-full border border-border bg-muted"
+                            style={{
+                              backgroundColor:
+                                color === 'Black' ? 'hsl(var(--foreground))' :
+                                color === 'White' || color === 'Ivory' ? 'hsl(var(--background))' :
+                                color === 'Navy' || color === 'Deep Navy' ? 'hsl(220 60% 20%)' :
+                                'hsl(var(--muted))'
+                            }}
                           />
                         ))}
                         {product.colors.length > 3 && (
