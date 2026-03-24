@@ -334,7 +334,7 @@ export default function Shop() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-3 right-3 bg-white/80 hover:bg-white backdrop-blur-sm"
+                      className="absolute top-3 right-3 bg-background/80 hover:bg-background backdrop-blur-sm"
                       onClick={() => handleWishlistToggle(product.id)}
                     >
                       <Heart
