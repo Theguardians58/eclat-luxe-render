@@ -404,26 +404,6 @@ export default function Shop() {
                 </div>
               ))}
             </div>
-
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">
-                  No products found matching your filters.
-                </p>
-                <Button
-                  variant="minimal"
-                  className="mt-4"
-                  onClick={() => setFilters({
-                    category: [],
-                    size: [],
-                    color: [],
-                    priceRange: [0, 1000],
-                    inStock: false,
-                  })}
-                >
-                  Clear all filters
-                </Button>
-              </div>
             )}
           </div>
         </div>
