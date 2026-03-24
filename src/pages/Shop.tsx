@@ -74,7 +74,7 @@ export default function Shop() {
     }
 
     return filtered;
-  }, [filters, sortBy]);
+  }, [products, filters, sortBy]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -187,9 +187,9 @@ export default function Shop() {
           <Slider
             value={filters.priceRange}
             onValueChange={(value) => setFilters({ priceRange: value as [number, number] })}
-            max={1000}
+            max={10000}
             min={0}
-            step={25}
+            step={100}
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
@@ -275,7 +275,7 @@ export default function Shop() {
                   category: [],
                   size: [],
                   color: [],
-                  priceRange: [0, 1000],
+                  priceRange: [0, 10000],
                   inStock: false,
                 })}
               >

@@ -55,6 +55,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+
           {shouldShowWelcome ? (
             <Welcome />
           ) : (

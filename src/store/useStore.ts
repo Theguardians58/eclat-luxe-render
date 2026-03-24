@@ -160,7 +160,7 @@ export const useStore = create<StoreState>()(
         category: [],
         size: [],
         color: [],
-        priceRange: [0, 1000],
+        priceRange: [0, 10000],
         inStock: false,
       },
       setFilters: (newFilters) => {
@@ -174,7 +174,7 @@ export const useStore = create<StoreState>()(
             category: [],
             size: [],
             color: [],
-            priceRange: [0, 1000],
+            priceRange: [0, 10000],
             inStock: false,
           },
         });
