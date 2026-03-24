@@ -189,7 +189,7 @@ export default function Shop() {
             onValueChange={(value) => setFilters({ priceRange: value as [number, number] })}
             max={10000}
             min={0}
-            step={25}
+            step={100}
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
