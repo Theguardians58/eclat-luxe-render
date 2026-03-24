@@ -304,7 +304,7 @@ export default function Shop() {
                 {filteredProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className="group relative bg-white rounded-lg shadow-soft overflow-hidden product-card"
+                  className="group relative bg-card rounded-lg shadow-soft overflow-hidden product-card"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="aspect-[3/4] overflow-hidden bg-subtle">
