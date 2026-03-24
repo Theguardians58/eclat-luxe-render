@@ -304,7 +304,7 @@ export default function Shop() {
                 {filteredProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className="group relative bg-white rounded-lg shadow-soft overflow-hidden product-card"
+                  className="group relative bg-card rounded-lg shadow-soft overflow-hidden product-card"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="aspect-[3/4] overflow-hidden bg-subtle">
@@ -334,13 +334,13 @@ export default function Shop() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-3 right-3 bg-white/80 hover:bg-white backdrop-blur-sm"
+                      className="absolute top-3 right-3 bg-background/80 hover:bg-background backdrop-blur-sm"
                       onClick={() => handleWishlistToggle(product.id)}
                     >
                       <Heart
                         className={`h-4 w-4 ${
                           isInWishlist(product.id)
-                            ? 'fill-current text-red-500'
+                            ? 'fill-current text-destructive'
                             : 'text-muted-foreground'
                         }`}
                       />
@@ -355,7 +355,7 @@ export default function Shop() {
                       
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-current text-yellow-400" />
+                          <Star className="h-4 w-4 fill-current text-accent-foreground" />
                           <span className="text-sm text-muted-foreground">
                             {product.rating} ({product.reviews})
                           </span>
@@ -379,12 +379,14 @@ export default function Shop() {
                         {product.colors.slice(0, 3).map((color, colorIndex) => (
                           <div
                             key={colorIndex}
-                            className={`w-4 h-4 rounded-full border border-border ${
-                              color === 'Black' ? 'bg-black' :
-                              color === 'White' || color === 'Ivory' ? 'bg-white' :
-                              color === 'Navy' || color === 'Deep Navy' ? 'bg-blue-900' :
-                              'bg-gray-300'
-                            }`}
+                            className="w-4 h-4 rounded-full border border-border bg-muted"
+                            style={{
+                              backgroundColor:
+                                color === 'Black' ? 'hsl(var(--foreground))' :
+                                color === 'White' || color === 'Ivory' ? 'hsl(var(--background))' :
+                                color === 'Navy' || color === 'Deep Navy' ? 'hsl(220 60% 20%)' :
+                                'hsl(var(--muted))'
+                            }}
                           />
                         ))}
                         {product.colors.length > 3 && (
