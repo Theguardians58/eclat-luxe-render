@@ -340,7 +340,7 @@ export default function Shop() {
                       <Heart
                         className={`h-4 w-4 ${
                           isInWishlist(product.id)
-                            ? 'fill-current text-red-500'
+                            ? 'fill-current text-destructive'
                             : 'text-muted-foreground'
                         }`}
                       />
