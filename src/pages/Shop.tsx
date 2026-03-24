@@ -355,7 +355,7 @@ export default function Shop() {
                       
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-current text-yellow-400" />
+                          <Star className="h-4 w-4 fill-current text-accent-foreground" />
                           <span className="text-sm text-muted-foreground">
                             {product.rating} ({product.reviews})
                           </span>
