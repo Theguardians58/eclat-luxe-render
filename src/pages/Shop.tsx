@@ -187,7 +187,7 @@ export default function Shop() {
           <Slider
             value={filters.priceRange}
             onValueChange={(value) => setFilters({ priceRange: value as [number, number] })}
-            max={1000}
+            max={10000}
             min={0}
             step={25}
             className="w-full"
