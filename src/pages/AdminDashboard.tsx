@@ -320,6 +320,13 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <ProductFormDialog
+        open={productFormOpen}
+        onOpenChange={setProductFormOpen}
+        product={editingProduct}
+        onSuccess={fetchAllData}
+      />
     </div>
   );
 }
