@@ -24,6 +24,7 @@ import Careers from "./pages/Careers";
 import FAQ from "./pages/FAQ";
 import CareInstructions from "./pages/CareInstructions";
 import ShippingReturns from "./pages/ShippingReturns";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
@@ -78,6 +79,7 @@ const App = () => {
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/care" element={<CareInstructions />} />
                 <Route path="/shipping" element={<ShippingReturns />} />
+                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>
