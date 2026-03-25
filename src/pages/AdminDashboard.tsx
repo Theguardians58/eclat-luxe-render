@@ -8,9 +8,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Package, ShoppingCart, Users, BarChart3, Eye, Trash2 } from 'lucide-react';
+import { Package, ShoppingCart, Users, BarChart3, Eye, Trash2, Pencil, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import ProductFormDialog from '@/components/admin/ProductFormDialog';
 
 interface DashboardStats {
   totalProducts: number;
@@ -30,6 +31,8 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<any[]>([]);
   const [tracking, setTracking] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [productFormOpen, setProductFormOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
 
   useEffect(() => {
     if (!adminLoading && !isAdmin) {
@@ -143,6 +146,12 @@ export default function AdminDashboard() {
         {/* Products Tab */}
         <TabsContent value="products">
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-lg">Products</CardTitle>
+              <Button size="sm" onClick={() => { setEditingProduct(null); setProductFormOpen(true); }}>
+                <Plus className="h-4 w-4 mr-1" /> Add Product
+              </Button>
+            </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -161,6 +170,8 @@ export default function AdminDashboard() {
                         {[...Array(5)].map((_, j) => <TableCell key={j}><Skeleton className="h-4 w-20" /></TableCell>)}
                       </TableRow>
                     ))
+                  ) : products.length === 0 ? (
+                    <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No products yet</TableCell></TableRow>
                   ) : products.map(p => (
                     <TableRow key={p.id}>
                       <TableCell className="font-medium">{p.name}</TableCell>
@@ -171,9 +182,12 @@ export default function AdminDashboard() {
                           {p.in_stock ? 'In Stock' : 'Out of Stock'}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="space-x-1">
                         <Button variant="ghost" size="icon" onClick={() => navigate(`/product/${p.id}`)}>
                           <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => { setEditingProduct(p); setProductFormOpen(true); }}>
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDeleteProduct(p.id)}>
                           <Trash2 className="h-4 w-4 text-destructive" />
