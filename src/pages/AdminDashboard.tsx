@@ -73,10 +73,22 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteProduct = async (id: string) => {
+    // Find the product to get its images before deleting
+    const product = products.find(p => p.id === id);
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
+      // Bulk delete images from storage
+      if (product?.images?.length) {
+        const BUCKET_PREFIX = 'https://grbebiwrazrrjadltmzb.supabase.co/storage/v1/object/public/product-images/';
+        const paths = product.images
+          .filter((url: string) => url.startsWith(BUCKET_PREFIX))
+          .map((url: string) => url.replace(BUCKET_PREFIX, ''));
+        if (paths.length > 0) {
+          await supabase.storage.from('product-images').remove(paths);
+        }
+      }
       toast({ title: 'Product deleted' });
       setProducts(prev => prev.filter(p => p.id !== id));
       setStats(prev => ({ ...prev, totalProducts: prev.totalProducts - 1 }));
