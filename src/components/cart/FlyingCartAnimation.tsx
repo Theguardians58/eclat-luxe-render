@@ -23,25 +23,30 @@ export function FlyingCartAnimation({ items, onComplete }: FlyingCartAnimationPr
             position: 'fixed',
             left: item.startPosition.x,
             top: item.startPosition.y,
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
             opacity: 1,
+            scale: 1,
+            rotate: 0,
             zIndex: 9999,
+            borderRadius: 12,
           }}
           animate={{
             left: item.endPosition.x,
             top: item.endPosition.y,
-            width: 30,
-            height: 30,
-            opacity: 0.5,
+            width: 24,
+            height: 24,
+            opacity: 0.3,
+            scale: 0.4,
+            rotate: 15,
           }}
           exit={{
             opacity: 0,
             scale: 0,
           }}
           transition={{
-            duration: 0.8,
-            ease: [0.43, 0.13, 0.23, 0.96],
+            duration: 0.65,
+            ease: [0.32, 0, 0.24, 1],
           }}
           onAnimationComplete={() => onComplete(item.id)}
           className="pointer-events-none"
@@ -49,7 +54,7 @@ export function FlyingCartAnimation({ items, onComplete }: FlyingCartAnimationPr
           <img
             src={item.imageUrl}
             alt="Flying to cart"
-            className="w-full h-full object-cover rounded-lg shadow-elegant"
+            className="w-full h-full object-cover rounded-lg shadow-intense"
           />
         </motion.div>
       ))}
