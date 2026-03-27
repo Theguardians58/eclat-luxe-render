@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -11,11 +11,18 @@ interface ImageUploadProps {
 }
 
 const SUPABASE_URL = "https://grbebiwrazrrjadltmzb.supabase.co";
+const BUCKET_PREFIX = `${SUPABASE_URL}/storage/v1/object/public/product-images/`;
+
+export function getStoragePath(url: string): string | null {
+  return url.startsWith(BUCKET_PREFIX) ? url.replace(BUCKET_PREFIX, '') : null;
+}
 
 export default function ImageUpload({ images, onChange }: ImageUploadProps) {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const uploadFile = async (file: File): Promise<string | null> => {
@@ -32,7 +39,7 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
       return null;
     }
 
-    return `${SUPABASE_URL}/storage/v1/object/public/product-images/${filePath}`;
+    return `${BUCKET_PREFIX}${filePath}`;
   };
 
   const handleFiles = async (files: FileList | File[]) => {
@@ -56,22 +63,51 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
 
   const removeImage = async (index: number) => {
     const url = images[index];
-    // Try to delete from storage if it's our bucket
-    const prefix = `${SUPABASE_URL}/storage/v1/object/public/product-images/`;
-    if (url.startsWith(prefix)) {
-      const path = url.replace(prefix, '');
+    const path = getStoragePath(url);
+    if (path) {
       await supabase.storage.from('product-images').remove([path]);
     }
     onChange(images.filter((_, i) => i !== index));
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     if (e.dataTransfer.files.length) {
       handleFiles(e.dataTransfer.files);
     }
   };
+
+  // Drag-and-drop reorder handlers
+  const handleReorderDragStart = useCallback((e: React.DragEvent, index: number) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(index));
+    setDragIndex(index);
+  }, []);
+
+  const handleReorderDragOver = useCallback((e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  }, []);
+
+  const handleReorderDrop = useCallback((e: React.DragEvent, toIndex: number) => {
+    e.preventDefault();
+    const fromIndex = dragIndex;
+    setDragIndex(null);
+    setDragOverIndex(null);
+    if (fromIndex === null || fromIndex === toIndex) return;
+
+    const reordered = [...images];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+    onChange(reordered);
+  }, [dragIndex, images, onChange]);
+
+  const handleReorderDragEnd = useCallback(() => {
+    setDragIndex(null);
+    setDragOverIndex(null);
+  }, []);
 
   return (
     <div className="space-y-3">
@@ -82,7 +118,7 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
         )}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
-        onDrop={handleDrop}
+        onDrop={handleFileDrop}
         onClick={() => fileInputRef.current?.click()}
       >
         {uploading ? (
@@ -108,25 +144,44 @@ export default function ImageUpload({ images, onChange }: ImageUploadProps) {
       </div>
 
       {images.length > 0 && (
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-          {images.map((url, i) => (
-            <div key={url + i} className="relative group aspect-square rounded-md overflow-hidden border border-border bg-muted">
-              <img src={url} alt={`Product ${i + 1}`} className="w-full h-full object-cover" />
-              <button
-                type="button"
-                onClick={() => removeImage(i)}
-                className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+        <>
+          <p className="text-xs text-muted-foreground">Drag images to reorder. First image is the main photo.</p>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {images.map((url, i) => (
+              <div
+                key={url + i}
+                draggable
+                onDragStart={(e) => handleReorderDragStart(e, i)}
+                onDragOver={(e) => handleReorderDragOver(e, i)}
+                onDrop={(e) => handleReorderDrop(e, i)}
+                onDragEnd={handleReorderDragEnd}
+                className={cn(
+                  "relative group aspect-square rounded-md overflow-hidden border bg-muted cursor-grab active:cursor-grabbing transition-all",
+                  dragIndex === i && "opacity-40 scale-95",
+                  dragOverIndex === i && dragIndex !== i && "ring-2 ring-primary",
+                  "border-border"
+                )}
               >
-                <X className="h-3.5 w-3.5" />
-              </button>
-              {i === 0 && (
-                <span className="absolute bottom-1 left-1 text-[10px] bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
-                  Main
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
+                <img src={url} alt={`Product ${i + 1}`} className="w-full h-full object-cover pointer-events-none" />
+                <div className="absolute top-1 left-1 bg-background/80 rounded p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <GripVertical className="h-3.5 w-3.5 text-muted-foreground" />
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); removeImage(i); }}
+                  className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+                {i === 0 && (
+                  <span className="absolute bottom-1 left-1 text-[10px] bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
+                    Main
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
