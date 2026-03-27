@@ -135,18 +135,19 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-border bg-white/95 backdrop-blur-md">
-            <nav className="py-4 space-y-2">
-              {navigation.map((item) => (
+          <div className="lg:hidden border-t border-border bg-white/95 backdrop-blur-md animate-mobile-menu-in overflow-hidden">
+            <nav className="py-4 space-y-1">
+              {navigation.map((item, i) => (
                 <Link
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    "block px-4 py-3 text-base font-medium transition-colors",
+                    "block px-4 py-3 text-base font-medium transition-all animate-fade-in",
                     location.pathname === item.href
                       ? "text-primary bg-subtle"
                       : "text-foreground hover:text-primary hover:bg-subtle"
                   )}
+                  style={{ animationDelay: `${i * 50}ms` }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
